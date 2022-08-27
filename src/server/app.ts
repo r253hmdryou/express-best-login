@@ -36,7 +36,7 @@ function createApp(): express.Express {
 			threshold: 0,
 			level: 9,
 			memLevel: 9,
-		})) // nginx等のリバースプロキシーで圧縮する場合は不要
+		}))
 
 		.use(routing());
 }

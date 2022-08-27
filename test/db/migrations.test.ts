@@ -11,36 +11,36 @@ import { createInMemoryDatabase, dropDatabase, migrationDown } from "../libs/seq
  */
 function testMigrations(): void {
 	test("migration", async() => {
-		// マイグレーションを実行
+		// migration up
 		const sequelize = await createInMemoryDatabase();
 
 		{
 			const result = await sequelize.getQueryInterface().showAllTables();
-			expect(result.length).toBeGreaterThan(3); // テスト実装時はSequelizeMeta + 3テーブルのため、3以上で検証
+			expect(result.length).toBeGreaterThan(0); // TODO: change length to more than 1 if you add more tables
 		}
 
 		await migrationDown();
-		// データベースが空っぽなことを確認 - SequelizeMetaのみが存在
+		// database is empty - only SequelizeMeta
 		{
 			const result = await sequelize.getQueryInterface().showAllTables();
 			expect(result).toEqual([
 				{
-					schema: expect.any(String), // DB名は可変なため無視
+					schema: expect.any(String), // ignore database name test because variable
 					tableName: "SequelizeMeta",
 				},
 			]);
 		}
 
-		// まだ接続されているのでエラーが出ない
+		// still connecting
 		{
 			const result = sequelize.query("SELECT 1");
 			await expect(result).resolves.toBeTruthy();
 		}
 
-		// 接続を切る
+		// close database connection
 		await closeDatabase();
 
-		// 接続を切った後は接続できないことを確認
+		// cannot execute query because connection is closed
 		{
 			const result = sequelize.query("SELECT 1");
 			await expect(result).rejects.toThrow();

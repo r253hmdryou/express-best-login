@@ -3,44 +3,16 @@ import { AppError } from "libs/error/AppError";
 import { errorMessages } from "libs/error/messages";
 import { routingHandler } from "libs/handler";
 
-import {routing as routingV1} from "./routes/v1";
-
 /**
  * routing function
  * @returns Router
  */
 export function routing(): express.Router {
 	return express.Router()
-		.use("/v1", routingV1())
-		.get("/down", routingHandler(getDown))
-		.get("/error", routingHandler(getError))
 		.get("/hello", routingHandler(getHello))
 		.use(notFound)
 		.use(AppErrorHandler)
 		.use(errorHandler);
-}
-
-/**
- * GET /down
- * Server Down
- * @param _req request
- * @param _res response
- * @param _next next
- * @returns void
- */
-async function getDown(_req: express.Request, _res: express.Response, _next: express.NextFunction): Promise<void> {
-	throw new Error("Down");
-}
-
-/**
- * GET /error
- * Error
- * @param _req request
- * @param _res response
- * @returns void
- */
-async function getError(_req: express.Request, _res: express.Response): Promise<void> {
-	AppError.raise(errorMessages.general.badRequest);
 }
 
 /**

@@ -1,29 +1,50 @@
 # About
 
-This is plain express typescript project.
+This is Repository to explore to make the BEST login API.
 
-## Requirements
+## Getting Started
 
-- NodeJS v16.x
-- npm
+### install NodeJS v16.x
 
-## Setup
+### clone this repository
 
-install dependencies packages
+```shell
+git clone https://github.com/r253hmdryou/express-best-login-api.git
+```
 
-```bash
+### copy env
+
+```shell
+cp .env.example .env
+```
+
+### install dependencies
+
+```shell
 npm ci
 ```
 
-start server in docker
+### build
 
-```bash
+```shell
+npm run build
+```
+
+### start server in docker
+
+```shell
 docker-compose up -d --build
 ```
 
-test
+### test
+
+lint and jest
 
 ```bash
 docker-compose up -d --build jestdb
-npm run test
+npm run verify
 ```
+
+### API Document
+
+[swagger](./src/oas/v1.yaml)

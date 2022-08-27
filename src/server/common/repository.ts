@@ -1,4 +1,3 @@
-// import { glob } from "glob";
 import { config } from "libs/config";
 import {Sequelize} from "sequelize";
 
