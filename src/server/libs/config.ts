@@ -7,6 +7,10 @@ export const config = {
 		password: getDbPassword(),
 		logging: false,
 	},
+	mail: {
+		transporter: getMailTransporter(),
+		from: getMailFromAddress(),
+	},
 };
 
 /**
@@ -66,4 +70,26 @@ function getDbPassword(): string {
 		throw new Error("DATABASE_PASS is not defined");
 	}
 	return process.env.DATABASE_PASS;
+}
+
+/**
+ * get mail transporter
+ * @returns mail transporter
+ */
+function getMailTransporter(): string {
+	if(process.env.MAIL_TRANSPORTER === undefined) {
+		throw new Error("MAIL_TRANSPORTER is not defined");
+	}
+	return process.env.MAIL_TRANSPORTER;
+}
+
+/**
+ * get mail from address
+ * @returns mail from address
+ */
+function getMailFromAddress(): string {
+	if(process.env.MAIL_FROM === undefined) {
+		throw new Error("MAIL_FROM is not defined");
+	}
+	return process.env.MAIL_FROM;
 }
