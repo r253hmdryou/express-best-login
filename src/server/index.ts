@@ -9,7 +9,6 @@ main();
  * @returns void
  */
 function main(): void {
-	console.log("main");
 	const server = app.listen(3000);
 
 	sequelize.authenticate()
@@ -18,6 +17,7 @@ function main(): void {
 		})
 		.catch((error) => {
 			console.error("Unable to connect to the database:", error);
+			gracefulShutdown(server);
 		});
 
 	process
