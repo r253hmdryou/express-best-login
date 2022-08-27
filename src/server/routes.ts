@@ -2,6 +2,7 @@ import express from "express";
 import { AppError } from "libs/error/AppError";
 import { errorMessages } from "libs/error/messages";
 import { routingHandler } from "libs/handler";
+import { routing as routingV1 } from "./routes/v1";
 
 /**
  * routing function
@@ -9,6 +10,7 @@ import { routingHandler } from "libs/handler";
  */
 export function routing(): express.Router {
 	return express.Router()
+		.use("/v1", routingV1())
 		.get("/hello", routingHandler(getHello))
 		.use(notFound)
 		.use(AppErrorHandler)

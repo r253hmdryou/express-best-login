@@ -39,4 +39,24 @@ export const errorMessages = {
 			message: "Internal Server Error",
 		},
 	},
+	user: {
+		create: {
+			code: "userCreate",
+			message: "Failed to create user",
+		},
+		param: {
+			email: {
+				default: {
+					status: STATUS.BAD_REQUEST,
+					code: "invalidUserParamEmail",
+					message: "Invalid email",
+				},
+				pattern: {
+					status: STATUS.BAD_REQUEST,
+					code: "invalidUserParamEmailPattern",
+					message: "Invalid email pattern",
+				},
+			},
+		},
+	},
 };
