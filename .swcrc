@@ -3,8 +3,8 @@
 	"jsc": {
 		"baseUrl": ".",
 		"paths": {
-			"@testlibs/*": [
-				"test/server/@libs/*"
+			"@test/*": [
+				"test/*"
 			]
 		},
 		"parser": {

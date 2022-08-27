@@ -88,7 +88,7 @@ export async function migrationDown(): Promise<void> {
 		},
 		storage: storage,
 		context: migrationSequelize.getQueryInterface(),
-		logger: console,
+		logger: undefined,
 	});
 	await umzug.down({
 		to: 0,

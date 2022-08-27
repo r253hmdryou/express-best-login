@@ -16,7 +16,7 @@ function testMigrations(): void {
 
 		{
 			const result = await sequelize.getQueryInterface().showAllTables();
-			expect(result.length).toBeGreaterThan(0); // TODO: change length to more than 1 if you add more tables
+			expect(result.length).toBeGreaterThan(1); // TODO: change length to more than 1 if you add more tables
 		}
 
 		await migrationDown();

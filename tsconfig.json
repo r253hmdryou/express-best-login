@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
+      "@test/*": ["test/*"],
       "*": ["src/server/*"]
     },
     "esModuleInterop": true,
