@@ -11,6 +11,12 @@ export const config = {
 		transporter: getMailTransporter(),
 		from: getMailFromAddress(),
 	},
+	user: {
+		password: {
+			minLength: 8,
+			maxLength: 100,
+		},
+	},
 };
 
 /**

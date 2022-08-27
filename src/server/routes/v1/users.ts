@@ -6,6 +6,7 @@ import { routingHandler } from "libs/handler";
 import * as services from "services/v1/users";
 
 import * as validators from "validators/v1/users";
+import { paramUserId } from "validators/common";
 
 /**
  * routing users
@@ -13,7 +14,8 @@ import * as validators from "validators/v1/users";
  */
 export function routing(): express.Router {
 	return express.Router()
-		.post("/", routingHandler(post));
+		.post("/", routingHandler(post))
+		.post("/:userId", routingHandler(postUserId));
 }
 
 /**
@@ -30,4 +32,21 @@ async function post(req: express.Request, res: express.Response): Promise<void> 
 	res
 		.status(201)
 		.send();
+}
+
+/**
+ * POST /v1/users/:userId
+ * signup user
+ * @param req request
+ * @param res response
+ * @returns void
+ */
+async function postUserId(req: express.Request, res: express.Response): Promise<void> {
+	const reqParam: V1.SignUp.RequestParams = paramUserId(req);
+	const reqBody: V1.SignUp.RequestBody = validators.BodyPostUserId(req);
+	const resBody: V1.SignUp.ResponseBody = await services.postUserId(reqParam.userId, reqBody.password);
+
+	res
+		.status(201)
+		.send(resBody);
 }

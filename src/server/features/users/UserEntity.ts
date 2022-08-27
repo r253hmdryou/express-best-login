@@ -1,3 +1,4 @@
+import argon2 from "argon2";
 import { generateUuid } from "libs/utils";
 import { Entity } from "common/entity";
 import { UserModel } from "common/models/UserModel";
@@ -6,9 +7,11 @@ type PropertiesEssential = {
 	email: string;
 }
 
-type Properties = PropertiesEssential & {
+type Properties = {
 	id?: number;
 	uuid: string;
+	email: string | null;
+	password: string | null;
 	createdAt: number;
 	deletedAt: number | null;
 }
@@ -17,8 +20,9 @@ export class UserEntity extends Entity<Properties> {
 
 	static factory(properties: PropertiesEssential): UserEntity {
 		return new UserEntity({
-			email: properties.email,
 			uuid: generateUuid(),
+			email: properties.email,
+			password: null,
 			createdAt: Date.now(),
 			deletedAt: null,
 		});
@@ -29,6 +33,7 @@ export class UserEntity extends Entity<Properties> {
 			id: model.id,
 			uuid: model.uuid,
 			email: model.email,
+			password: model.password,
 			createdAt: model.createdAt,
 			deletedAt: model.deletedAt,
 		});
@@ -42,8 +47,27 @@ export class UserEntity extends Entity<Properties> {
 		return this.properties.uuid;
 	}
 
-	get email(): string {
+	get email(): string | null {
 		return this.properties.email;
+	}
+
+	async setPassword(password: string): Promise<void> {
+		this.properties.password = await argon2.hash(password);
+	}
+
+	get password(): string | null {
+		return this.properties.password;
+	}
+
+	async verifyPassword(password: string): Promise<boolean> {
+		if(this.properties.password === null){
+			return false;
+		}
+		return await argon2.verify(this.properties.password, password);
+	}
+
+	isSignedUp(): boolean {
+		return this.properties.password !== null;
 	}
 
 	get createdAt(): number {

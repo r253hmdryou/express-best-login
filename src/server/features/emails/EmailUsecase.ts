@@ -1,6 +1,8 @@
 import nodemailer, { SendMailOptions } from "nodemailer";
 import { UserEntity } from "features/users/UserEntity";
 import { config } from "libs/config";
+import { AppError } from "libs/error/AppError";
+import { errorMessages } from "libs/error/messages";
 
 interface MailaddressRequiredSendMailOptions extends SendMailOptions
 {
@@ -17,6 +19,9 @@ const transporter = nodemailer.createTransport(config.mail.transporter);
  */
 export function sendConfirmToCreateUser(user: UserEntity): void {
 	const email = user.email;
+	if(email === null) {
+		AppError.raise(errorMessages.general.internalServerError);
+	}
 
 	sendCore({
 		to: email,

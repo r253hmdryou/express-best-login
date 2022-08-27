@@ -2,6 +2,24 @@ import { UserModel } from "common/models/UserModel";
 import { UserEntity } from "./UserEntity";
 
 /**
+ * find user by uuid
+ * @param uuid uuid
+ * @returns user
+ */
+export async function findByUuid(uuid: string): Promise<UserEntity | null> {
+	const model = await UserModel.findOne({
+		where: {
+			uuid: uuid,
+		},
+	});
+
+	if(model === null) {
+		return null;
+	}
+	return UserEntity.fromModel(model);
+}
+
+/**
  * find user by email
  * @param email email
  * @returns user or null
@@ -42,6 +60,7 @@ function toModel(user: UserEntity): UserModel{
 	}
 	model.uuid = user.uuid;
 	model.email = user.email;
+	model.password = user.password;
 	model.createdAt = user.createdAt;
 	model.deletedAt = user.deletedAt;
 

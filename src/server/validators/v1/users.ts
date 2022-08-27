@@ -7,9 +7,17 @@ import { ErrorMessage, errorMessages } from "libs/error/messages";
 import { V1 } from "types/api";
 import { RULE } from "../common";
 import { Key } from "value-schema/dist/libs/types";
+import { config } from "libs/config";
 
 const schemaBodyPost = {
 	email: vs.email(),
+};
+
+const schemaBodyPostUserId = {
+	password: vs.string({
+		minLength: config.user.password.minLength,
+		maxLength: config.user.password.maxLength,
+	}),
 };
 
 /**
@@ -22,6 +30,22 @@ export function BodyPost(req: express.Request): V1.ConfirmEmailToCreateUser.Requ
 	const appError = AppError.factory(errorMessages.user.create);
 
 	return vs.applySchemaObject(schemaBodyPost, req.body, (error) => {
+		const key = error.keyStack.shift();
+		appError.addError(assignUserValidationError(key, error.rule));
+		appError.raiseIfError();
+	});
+}
+
+/**
+ * POST /v1/users/:userId
+ * signup user
+ * @param req request
+ * @returns RequestBody
+ */
+export function BodyPostUserId(req: express.Request): V1.SignUp.RequestBody {
+	const appError = AppError.factory(errorMessages.user.signup);
+
+	return vs.applySchemaObject(schemaBodyPostUserId, req.body, (error) => {
 		const key = error.keyStack.shift();
 		appError.addError(assignUserValidationError(key, error.rule));
 		appError.raiseIfError();
@@ -42,6 +66,15 @@ function assignUserValidationError(key: Key | undefined, rule: RULE): ErrorMessa
 			return errorMessages.user.param.email.pattern;
 		default:
 			return errorMessages.user.param.email.default;
+		}
+	case "password":
+		switch(rule) {
+		case vs.RULE.MIN_LENGTH:
+			return errorMessages.user.param.password.minLength(config.user.password.minLength);
+		case vs.RULE.MAX_LENGTH:
+			return errorMessages.user.param.password.maxLength(config.user.password.maxLength);
+		default:
+			return errorMessages.user.param.password.default;
 		}
 	default:
 		return errorMessages.general.badRequest;

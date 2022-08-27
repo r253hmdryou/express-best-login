@@ -44,7 +44,23 @@ export const errorMessages = {
 			code: "userCreate",
 			message: "Failed to create user",
 		},
+		signup: {
+			code: "userSignup",
+			message: "Failed to signup user",
+		},
+		alreadySignedUp: {
+			status: STATUS.FORBIDDEN,
+			code: "userAlreadySignedUp",
+			message: "User already signed up",
+		},
 		param: {
+			id: {
+				notFound: (id: string): ErrorMessage => ({
+					status: STATUS.NOT_FOUND,
+					code: "userIdNotFound",
+					message: `User not found. id: ${id}`,
+				}),
+			},
 			email: {
 				default: {
 					status: STATUS.BAD_REQUEST,
@@ -56,6 +72,23 @@ export const errorMessages = {
 					code: "invalidUserParamEmailPattern",
 					message: "Invalid email pattern",
 				},
+			},
+			password: {
+				default: {
+					status: STATUS.BAD_REQUEST,
+					code: "invalidUserParamPassword",
+					message: "Invalid password",
+				},
+				minLength: (minLength: number): ErrorMessage => ({
+					status: STATUS.BAD_REQUEST,
+					code: "invalidUserParamPasswordMinLength",
+					message: `Invalid password. Minimum length is ${minLength}`,
+				}),
+				maxLength: (maxLength: number): ErrorMessage => ({
+					status: STATUS.BAD_REQUEST,
+					code: "invalidUserParamPasswordMaxLength",
+					message: `Invalid password. Maximum length is ${maxLength}`,
+				}),
 			},
 		},
 	},

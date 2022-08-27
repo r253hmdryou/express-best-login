@@ -6,7 +6,8 @@ const TABLENAME = "users";
 export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
 	declare id: CreationOptional<number>;
 	declare uuid: string;
-	declare email: string;
+	declare email: string | null; // if null, then user is deleted
+	declare password: string | null;
 	declare createdAt: number;
 	declare deletedAt: number | null;
 
@@ -27,9 +28,14 @@ UserModel.init({
 	},
 	email: {
 		comment: "email",
-		allowNull: false,
+		allowNull: true,
 		type: DataTypes.STRING,
 		unique: true,
+	},
+	password: {
+		comment: "password",
+		allowNull: true,
+		type: DataTypes.STRING,
 	},
 	createdAt: {
 		comment: "created at",

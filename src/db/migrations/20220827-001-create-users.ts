@@ -22,9 +22,14 @@ export async function up(queryInterface: QueryInterface, _sequelize: Sequelize):
 		},
 		email: {
 			comment: "email",
-			allowNull: false,
+			allowNull: true,
 			type: DataTypes.STRING,
 			unique: true,
+		},
+		password: {
+			comment: "password",
+			allowNull: true,
+			type: DataTypes.STRING,
 		},
 		created_at: {
 			comment: "created at",
