@@ -33,6 +33,57 @@ components:
     InternalServerError:
       description: "Internal server error"
 
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      description: "User ID"
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+
+  schemas:
+    Id:
+      description: ID
+      type: string
+      format: uuid
+      example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+    email:
+      description: Email
+      type: string
+      format: email
+      example: "example@example.com"
+
+    User:
+      type: object
+      required:
+      - id
+      - email
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        email:
+          $ref: "#/components/schemas/email"
+
+    ConfirmEmailToCreateUserRequest:
+      type: object
+      required:
+      - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: "example@example.com"
+
+    SignUpRequest:
+      type: object
+      required:
+      - password
+      properties:
+        password:
+          type: string
+          example: "password"
+
 paths:
   /hello:
     get:
@@ -47,3 +98,44 @@ paths:
               schema:
                 type: string
                 example: "Hello World!"
+
+  /v1/users:
+    post:
+      summary: "Confirm email to Create User"
+      description: |
+        Confirm email to Create User
+        * Api sends an email to the user with a link to confirm the email address.
+        * if already registerd, successful response is returned too.
+      operationId: "confirmEmailToCreateUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmEmailToCreateUserRequest"
+      responses:
+        201:
+          description: "Always returns success if the format of the emaill address is correct"
+        400:
+          $ref: "#/components/responses/BadRequest"
+
+  /v1/users/{userId}/signup:
+    post:
+      summary: "Sign up"
+      description: "Sign up"
+      operationId: "signUp"
+      parameters:
+      - $ref: "#/components/parameters/UserId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+      responses:
+        201:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/BadRequest"
