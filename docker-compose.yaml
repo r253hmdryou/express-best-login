@@ -1,0 +1,48 @@
+version: '3'
+services:
+  node:
+    depends_on:
+      - mariadb
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    tty: true
+    container_name: plain-express-typescript
+    environment:
+      TZ: "Asia/Tokyo"
+      DB_PING_HOST: "pes-db"
+      DB_PING_USER: "pes"
+      DB_PING_PASS: "pes"
+    env_file:
+      - .env
+    ports:
+      - 23000:3000
+
+  mariadb:
+    image: mariadb:10.6.8
+    container_name: PES-db
+    environment:
+      TZ: "Asia/Tokyo"
+      MYSQL_ROOT_PASSWORD: "pes"
+      MYSQL_DATABASE: "PES"
+      MYSQL_USER: "pes"
+      MYSQL_PASSWORD: "pes"
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/mariadb/data:/var/lib/mysql
+
+  jestdb:
+    image: mariadb:10.6.8
+    container_name: jest-db
+    environment:
+      TZ: "Asia/Tokyo"
+      MYSQL_ROOT_PASSWORD: "pes"
+      MYSQL_USER: "pes"
+      MYSQL_PASSWORD: "pes"
+    env_file:
+      - .env.test
+    ports:
+      - 13306:3306

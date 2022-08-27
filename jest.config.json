@@ -1,0 +1,21 @@
+{
+  "testEnvironment": "node",
+  "moduleDirectories": [
+    "node_modules",
+    "src/server"
+  ],
+  "setupFiles": [
+    "jest-date-mock"
+  ],
+  "testMatch": [
+    "<rootDir>/test/**/*.test.ts"
+  ],
+
+  "collectCoverage": true,
+  "coverageDirectory": "./coverage/",
+  "maxWorkers": "4",
+
+  "transform": {
+    "^.+\\.(t|j)sx?$": ["@swc/jest"]
+  }
+}

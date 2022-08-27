@@ -1,0 +1,4 @@
+module.exports = {
+    "config": "dist/db/sequelize.js",
+    "migrations-path": "dist/db/migrations"
+}

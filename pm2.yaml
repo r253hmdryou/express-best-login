@@ -1,0 +1,11 @@
+apps:
+- name: "api"
+  script: "./dist/server/index.js"
+  exec_mode: "cluster_mode"
+  source_map_support: true
+  instances: 1
+  listen_timeout: 10000
+  env:
+    NODE_PATH: "./dist/server"
+    DEBUG: "app:server"
+    DEBUG_COLORS: "yes"

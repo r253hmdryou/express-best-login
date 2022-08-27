@@ -1,0 +1,207 @@
+openapi: "3.0.2"
+
+info:
+  version: "1.0.0"
+  title: "pes-api"
+  description: "API for the PES project"
+
+servers:
+- url: "http://localhost:23000"
+  description: "Local server"
+
+tags:
+- name: user
+  description: "User operations"
+
+security:
+- bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    BadRequest:
+      description: "Bad request"
+    UnauthorizedError:
+      description: "Access token is missing or invalid"
+    ForbiddenError:
+      description: "Access token is valid but user does not have permission to access the resource"
+    NotFound:
+      description: "Entity not found"
+    Conflict:
+      description: "Entity already exists"
+    InternalServerError:
+      description: "Internal server error"
+
+  parameters:
+    UserId:
+      in: path
+      name: userId
+      description: "User ID"
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+
+  schemas:
+    Id:
+      description: ID
+      type: string
+      format: uuid
+      example: "12b73ca6-972d-456c-925a-a6288b1f54ba"
+    url:
+      description: URL
+      type: string
+      example: "https://example.com"
+
+    email:
+      description: Email address
+      type: string
+      nullable: true
+      example: example@example.com
+
+    UserCore:
+      type: object
+    User:
+      allOf:
+      - $ref: "#/components/schemas/UserCore"
+      - type: object
+        required:
+        - id
+        - email
+        properties:
+          id:
+            $ref: "#/components/schemas/Id"
+          email:
+            $ref: "#/components/schemas/email"
+    RequestCreateUser:
+      allOf:
+        - $ref: "#/components/schemas/UserCore"
+        - type: object
+          required:
+          - loginId
+          - password
+          properties:
+            loginId:
+              description: Login ID
+              type: string
+              example: "user"
+            password:
+              description: Password
+              type: string
+              example: "password"
+    RequestUpdateUser:
+      allOf:
+      - $ref: "#/components/schemas/UserCore"
+      - type: object
+        required:
+        - email
+        properties:
+          email:
+            $ref: "#/components/schemas/email"
+
+paths:
+  /v1/users:
+    get:
+      tags:
+      - user
+      summary: "Get all users"
+      description: "Get all users"
+      operationId: "getUsers"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - count
+                - users
+                properties:
+                  count:
+                    type: number
+                    example: 1
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+          headers:
+            X-Total-Count:
+              description: "Total count of users"
+              schema:
+                type: integer
+                example: 1
+    post:
+      tags:
+      - user
+      summary: "Create a user"
+      description: "Create a user"
+      operationId: "createUser"
+      requestBody:
+        description: "User to create"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestCreateUser"
+      responses:
+        201:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/BadRequest"
+        409:
+          $ref: "#/components/responses/Conflict"
+  /v1/users/:userId:
+    get:
+      tags:
+      - user
+      summary: "Get user"
+      description: "Get user"
+      operationId: "getUser"
+      parameters:
+      - $ref: "#/components/parameters/UserId"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        404:
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+      - user
+      summary: "Update user"
+      description: "Update user"
+      operationId: "updateUser"
+      parameters:
+      - $ref: "#/components/parameters/UserId"
+      requestBody:
+        description: "User to update"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUpdateUser"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/BadRequest"
+        404:
+          $ref: "#/components/responses/NotFound"
+        409:
+          $ref: "#/components/responses/Conflict"

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+
+  "compilerOptions": {
+    "outDir": "./dist/db/migrations",
+    "removeComments": true,
+    "sourceMap": true,
+  },
+  "include": [
+    "src/db/**/*.ts"
+  ]
+}
