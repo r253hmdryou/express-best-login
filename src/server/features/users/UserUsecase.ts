@@ -9,7 +9,7 @@ import * as EmailUsecase from "features/emails/EmailUsecase";
 
 import * as SessionRepository from "features/serssions/SessionRepository";
 
-import { User } from "types/api";
+import { UserForMe } from "types/api";
 
 declare module "express-session" {
 	interface SessionData {
@@ -37,6 +37,20 @@ async function findByUuid(uuid: string): Promise<UserEntity> {
  */
 async function findByEmail(email: string): Promise<UserEntity | null> {
 	return await UserRepository.findByEmail(email);
+}
+
+/**
+ * find authorized user
+ * by sessionID
+ * @param req request
+ * @returns user
+ */
+export async function findAuthorizedUser(req: express.Request): Promise<UserEntity> {
+	const user = await UserRepository.findBySessionId(req.sessionID);
+	if(user === null) {
+		AppError.raise(errorMessages.general.unauthorized);
+	}
+	return user;
 }
 
 /**
@@ -111,7 +125,7 @@ export async function login(req: express.Request, email: string, password: strin
  * @param user user entity
  * @returns user response
  */
-export function toResponse(user: UserEntity): User {
+export function toResponse(user: UserEntity): UserForMe {
 	const email = user.email;
 	if(email === null) {
 		AppError.raise(errorMessages.general.internalServerError);

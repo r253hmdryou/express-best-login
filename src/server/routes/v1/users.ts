@@ -7,6 +7,7 @@ import * as services from "services/v1/users";
 
 import * as validators from "validators/v1/users";
 import { paramUserId } from "validators/common";
+import { findAuthorizedUser } from "features/users/UserUsecase";
 
 /**
  * routing users
@@ -15,6 +16,7 @@ import { paramUserId } from "validators/common";
 export function routing(): express.Router {
 	return express.Router()
 		.post("/", routingHandler(post))
+		.get("/me", routingHandler(getMe))
 		.post("/:userId", routingHandler(postUserId));
 }
 
@@ -32,6 +34,22 @@ async function post(req: express.Request, res: express.Response): Promise<void> 
 	res
 		.status(201)
 		.send();
+}
+
+/**
+ * GET /v1/users/me
+ * get my user
+ * @param req request
+ * @param res response
+ * @returns void
+ */
+async function getMe(req: express.Request, res: express.Response): Promise<void> {
+	const user = await findAuthorizedUser(req);
+	const resBody: V1.GetMyUser.ResponseBody = services.getMe(user);
+
+	res
+		.status(200)
+		.send(resBody);
 }
 
 /**

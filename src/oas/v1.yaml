@@ -60,7 +60,7 @@ components:
       type: string
       example: "password"
 
-    User:
+    UserForMe:
       type: object
       required:
       - id
@@ -151,6 +151,24 @@ paths:
           description: "Always returns success if the format of the emaill address is correct"
         400:
           $ref: "#/components/responses/BadRequest"
+  /v1/users/me:
+    get:
+      summary: "Get my user"
+      description: "Get my user"
+      operationId: "getMyUser"
+      tags:
+      - users
+      security:
+      - userAuth: []
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserForMe"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
   /v1/users/{userId}:
     post:
       summary: "Sign up"
@@ -171,6 +189,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserForMe"
         400:
           $ref: "#/components/responses/BadRequest"

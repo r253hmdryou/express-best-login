@@ -1,3 +1,4 @@
+import { UserEntity } from "features/users/UserEntity";
 import * as UserUsecase from "features/users/UserUsecase";
 import { V1 } from "types/api";
 
@@ -9,6 +10,16 @@ import { V1 } from "types/api";
  */
 export async function post(email: string): Promise<void> {
 	await UserUsecase.createAndSendEmail(email);
+}
+
+/**
+ * GET /v1/users/me
+ * get my user
+ * @param user user
+ * @returns user
+ */
+export function getMe(user: UserEntity): V1.GetMyUser.ResponseBody {
+	return UserUsecase.toResponse(user);
 }
 
 /**

@@ -31,6 +31,7 @@ function initialize(): void {
  */
 function testCreateUser(): void {
 	test("success: create user", async() => {
+		let cookie = null;
 		// create user request
 		{
 			const response = await request(app)
@@ -42,6 +43,7 @@ function testCreateUser(): void {
 
 			// always 201 if email is valid
 			expect(response.status).toEqual(201);
+			cookie = response.header["set-cookie"];
 		}
 
 		let userId = "";
@@ -101,17 +103,42 @@ function testCreateUser(): void {
 			expect(models[0].password).toMatch("$argon2id$v=19$m=4096,t=3,p=1$");
 		}
 
+		// get my user - not logged in
+		{
+			const response = await request(app)
+				.get(`/v1/users/me`)
+				.set("X-Requested-With", "test")
+				.set("Cookie", cookie);
+
+			expect(response.status).toEqual(401);
+			expect(response.body).toEqual({
+				code: "unauthorized",
+				message: "Unauthorized",
+			});
+		}
+
 		// login
 		{
 			const response = await request(app)
 				.post(`/v1/login`)
 				.set("X-Requested-With", "test")
+				.set("Cookie", cookie)
 				.send({
 					email: "test@example.com",
 					password: "password",
 				});
 
 			expect(response.status).toEqual(201);
+		}
+
+		// get my user
+		{
+			const response = await request(app)
+				.get(`/v1/users/me`)
+				.set("X-Requested-With", "test")
+				.set("Cookie", cookie);
+
+			expect(response.status).toEqual(200);
 		}
 	});
 
@@ -323,6 +350,7 @@ function testCreateUser(): void {
 			});
 		}
 
+		let cookie = "";
 		// login - parameter error
 		{
 			const response = await request(app)
@@ -343,6 +371,34 @@ function testCreateUser(): void {
 						message: "Invalid password. Minimum length is 8",
 					},
 				],
+			});
+			cookie = response.headers["set-cookie"];
+		}
+
+		// get my user - not logged in cookie
+		{
+			const response = await request(app)
+				.get(`/v1/users/me`)
+				.set("X-Requested-With", "test")
+				.set("Cookie", cookie);
+
+			expect(response.status).toEqual(401);
+			expect(response.body).toEqual({
+				code: "unauthorized",
+				message: "Unauthorized",
+			});
+		}
+
+		// get my user - cookie does not exist
+		{
+			const response = await request(app)
+				.get(`/v1/users/me`)
+				.set("X-Requested-With", "test");
+
+			expect(response.status).toEqual(401);
+			expect(response.body).toEqual({
+				code: "unauthorized",
+				message: "Unauthorized",
 			});
 		}
 	});

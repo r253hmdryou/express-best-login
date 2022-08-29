@@ -1,3 +1,4 @@
+import { SessionModel } from "common/models/SessionModel";
 import { UserModel } from "common/models/UserModel";
 import { UserEntity } from "./UserEntity";
 
@@ -31,6 +32,30 @@ export async function findByEmail(email: string): Promise<UserEntity | null>{
 		},
 	});
 	if(model === null){
+		return null;
+	}
+	return UserEntity.fromModel(model);
+}
+
+/**
+ * find user by sessionID
+ * @param sessionId sessionID
+ * @returns user or null
+ */
+export async function findBySessionId(sessionId: string): Promise<UserEntity | null> {
+	const model = await UserModel.findOne({
+		include: [
+			{
+				model: SessionModel,
+				required: true,
+				where: {
+					sessionId: sessionId,
+				},
+			},
+		],
+	});
+
+	if(model === null) {
 		return null;
 	}
 	return UserEntity.fromModel(model);

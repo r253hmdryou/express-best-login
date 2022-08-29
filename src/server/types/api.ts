@@ -30,7 +30,7 @@ export type Email = string;
  */
 export type Password = string;
 
-export interface User {
+export interface UserForMe {
   /** ID */
   id: Id;
 
@@ -85,6 +85,7 @@ export namespace Hello {
 export namespace V1 {
   /**
    * @description Login
+   * @tags users
    * @name Login
    * @summary Login
    * @request POST:/v1/login
@@ -102,6 +103,7 @@ export namespace V1 {
   }
   /**
    * @description Confirm email to Create User * Api sends an email to the user with a link to confirm the email address. * if already registerd, successful response is returned too.
+   * @tags users
    * @name ConfirmEmailToCreateUser
    * @summary Confirm email to Create User
    * @request POST:/v1/users
@@ -117,12 +119,30 @@ export namespace V1 {
     export type ResponseBody = void;
   }
   /**
+   * @description Get my user
+   * @tags users
+   * @name GetMyUser
+   * @summary Get my user
+   * @request GET:/v1/users/me
+   * @secure
+   * @response `200` `UserForMe` Successful operation
+   * @response `401` `any`
+   */
+  export namespace GetMyUser {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserForMe;
+  }
+  /**
    * @description Sign up
+   * @tags users
    * @name SignUp
    * @summary Sign up
-   * @request POST:/v1/users/{userId}/signup
+   * @request POST:/v1/users/{userId}
    * @secure
-   * @response `201` `User` successful operation
+   * @response `201` `UserForMe` successful operation
    * @response `400` `any`
    */
   export namespace SignUp {
@@ -130,6 +150,6 @@ export namespace V1 {
     export type RequestQuery = {};
     export type RequestBody = SignUpRequest;
     export type RequestHeaders = {};
-    export type ResponseBody = User;
+    export type ResponseBody = UserForMe;
   }
 }
