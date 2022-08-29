@@ -53,6 +53,12 @@ components:
       type: string
       format: email
       example: "example@example.com"
+    password:
+      description: |
+        * Must be at least 8 characters long
+        * Must be at most 200 characters long
+      type: string
+      example: "password"
 
     User:
       type: object
@@ -65,24 +71,30 @@ components:
         email:
           $ref: "#/components/schemas/email"
 
+    LoginRequest:
+      type: object
+      required:
+      - email
+      - password
+      properties:
+        email:
+          $ref: "#/components/schemas/email"
+        password:
+          $ref: "#/components/schemas/password"
     ConfirmEmailToCreateUserRequest:
       type: object
       required:
       - email
       properties:
         email:
-          type: string
-          format: email
-          example: "example@example.com"
-
+          $ref: "#/components/schemas/email"
     SignUpRequest:
       type: object
       required:
       - password
       properties:
         password:
-          type: string
-          example: "password"
+          $ref: "#/components/schemas/password"
 
 paths:
   /hello:
@@ -99,6 +111,26 @@ paths:
                 type: string
                 example: "Hello World!"
 
+  /v1/login:
+    post:
+      summary: "Login"
+      description: "Login"
+      operationId: "login"
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        201:
+          description: "Successful operation"
+        400:
+          $ref: "#/components/responses/BadRequest"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+
   /v1/users:
     post:
       summary: "Confirm email to Create User"
@@ -107,6 +139,8 @@ paths:
         * Api sends an email to the user with a link to confirm the email address.
         * if already registerd, successful response is returned too.
       operationId: "confirmEmailToCreateUser"
+      tags:
+      - users
       requestBody:
         content:
           application/json:
@@ -117,12 +151,13 @@ paths:
           description: "Always returns success if the format of the emaill address is correct"
         400:
           $ref: "#/components/responses/BadRequest"
-
-  /v1/users/{userId}/signup:
+  /v1/users/{userId}:
     post:
       summary: "Sign up"
       description: "Sign up"
       operationId: "signUp"
+      tags:
+      - users
       parameters:
       - $ref: "#/components/parameters/UserId"
       requestBody:

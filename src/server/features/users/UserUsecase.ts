@@ -1,12 +1,21 @@
+import express from "express";
 import { AppError } from "libs/error/AppError";
 import { errorMessages } from "libs/error/messages";
-
-import * as EmailUsecase from "features/emails/EmailUsecase";
 
 import { UserEntity } from "./UserEntity";
 import * as UserRepository from "./UserRepository";
 
+import * as EmailUsecase from "features/emails/EmailUsecase";
+
+import * as SessionRepository from "features/serssions/SessionRepository";
+
 import { User } from "types/api";
+
+declare module "express-session" {
+	interface SessionData {
+		eblaSessionId: string;
+	}
+}
 
 /**
  * find user by uuid
@@ -75,6 +84,26 @@ export async function signUp(userId: string, password: string): Promise<UserEnti
 	await UserRepository.save(user);
 
 	return user;
+}
+
+/**
+ * login user
+ * @param req request
+ * @param email email
+ * @param password password
+ * @returns void
+ */
+export async function login(req: express.Request, email: string, password: string): Promise<void> {
+	const user = await findByEmail(email);
+	if(user === null || !user.isAvailable()) {
+		AppError.raise(errorMessages.user.login);
+	}
+	if(!user.verifyPassword(password)) {
+		AppError.raise(errorMessages.user.login);
+	}
+
+	await SessionRepository.create(req.sessionID, user.id, req.session.cookie);
+	req.session.eblaSessionId = req.sessionID;
 }
 
 /**

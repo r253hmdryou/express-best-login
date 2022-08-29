@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
 
 /**
- * UUIDを生成する
+ * generate UUID
  * @returns UUID
  */
 export function generateUuid(): string {

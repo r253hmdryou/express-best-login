@@ -1,7 +1,7 @@
 import {Options, Sequelize} from "sequelize";
 import {SequelizeStorage, Umzug} from "umzug";
 import {config} from "libs/config";
-import { sequelize } from "common/repository";
+import { sequelize, store } from "common/repository";
 
 const rootOptions: Options = {
 	username: "root",
@@ -20,6 +20,7 @@ export const rootSequelize = new Sequelize(rootOptions);
  */
 export async function createInMemoryDatabase(): Promise<Sequelize> {
 	const rootQueryInterface = rootSequelize.getQueryInterface();
+	await rootQueryInterface.dropDatabase(config.db.database);
 	await rootQueryInterface.createDatabase(config.db.database);
 	await rootQueryInterface.sequelize.query(`GRANT ALL PRIVILEGES ON ${config.db.database}.* TO ${config.db.user}@'%' IDENTIFIED BY '${config.db.password}'`);
 
@@ -42,7 +43,7 @@ export async function createInMemoryDatabase(): Promise<Sequelize> {
 				return {
 					name,
 					up: async(): Promise<void> => {
-						return migration.up(context, migrationSequelize);
+						return await migration.up(context, migrationSequelize);
 					},
 				};
 			},
@@ -81,7 +82,7 @@ export async function migrationDown(): Promise<void> {
 				return {
 					name,
 					down: async(): Promise<void> => {
-						return migration.down(context, migrationSequelize);
+						return await migration.down(context, migrationSequelize);
 					},
 				};
 			},
@@ -93,6 +94,8 @@ export async function migrationDown(): Promise<void> {
 	await umzug.down({
 		to: 0,
 	});
+
+	await migrationSequelize.close();
 }
 /**
  * drop the database
@@ -100,6 +103,7 @@ export async function migrationDown(): Promise<void> {
  * @returns void
  */
 export async function dropDatabase(sequelize: Sequelize): Promise<void> {
+	store.close();
 	await rootSequelize.getQueryInterface().dropDatabase(sequelize.getDatabaseName());
 	await rootSequelize.close();
 	await sequelize.close();

@@ -4,15 +4,15 @@ import { Entity } from "common/entity";
 import { UserModel } from "common/models/UserModel";
 
 type PropertiesEssential = {
-	email: string;
+	readonly email: string;
 }
 
 type Properties = {
-	id?: number;
-	uuid: string;
+	readonly id?: number;
+	readonly uuid: string;
 	email: string | null;
 	password: string | null;
-	createdAt: number;
+	readonly createdAt: number;
 	deletedAt: number | null;
 }
 
@@ -37,6 +37,16 @@ export class UserEntity extends Entity<Properties> {
 			createdAt: model.createdAt,
 			deletedAt: model.deletedAt,
 		});
+	}
+
+	isAvailable(): boolean {
+		if(this.properties.deletedAt !== null) {
+			return false;
+		}
+		if(this.properties.email === null) {
+			return false;
+		}
+		return true;
 	}
 
 	get id(): number {

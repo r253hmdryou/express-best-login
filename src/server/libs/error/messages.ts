@@ -53,6 +53,11 @@ export const errorMessages = {
 			code: "userAlreadySignedUp",
 			message: "User already signed up",
 		},
+		login: {
+			status: STATUS.UNAUTHORIZED,
+			code: "userLogin",
+			message: "Failed to login user",
+		},
 		param: {
 			id: {
 				notFound: (id: string): ErrorMessage => ({

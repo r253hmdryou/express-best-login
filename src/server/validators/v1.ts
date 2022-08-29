@@ -1,19 +1,16 @@
 import express from "express";
 import vs from "value-schema";
+import { Key } from "value-schema/dist/libs/types";
 
+import { config } from "libs/config";
 import { AppError } from "libs/error/AppError";
 import { ErrorMessage, errorMessages } from "libs/error/messages";
 
+import { RULE } from "./common";
 import { V1 } from "types/api";
-import { RULE } from "../common";
-import { Key } from "value-schema/dist/libs/types";
-import { config } from "libs/config";
 
-const schemaBodyPost = {
+const schemaBodyPostLogin = {
 	email: vs.email(),
-};
-
-const schemaBodyPostUserId = {
 	password: vs.string({
 		minLength: config.user.password.minLength,
 		maxLength: config.user.password.maxLength,
@@ -21,32 +18,15 @@ const schemaBodyPostUserId = {
 };
 
 /**
- * POST /v1/users
- * confirm email to create user
+ * POST /v1/login
+ * login user
  * @param req request
  * @returns RequestBody
  */
-export function BodyPost(req: express.Request): V1.ConfirmEmailToCreateUser.RequestBody {
-	const appError = AppError.factory(errorMessages.user.create);
+export function BodyPostLogin(req: express.Request): V1.Login.RequestBody {
+	const appError = AppError.factory(errorMessages.user.login);
 
-	return vs.applySchemaObject(schemaBodyPost, req.body, (error) => {
-		const key = error.keyStack.shift();
-		appError.addError(assignUserValidationError(key, error.rule));
-	}, () => {
-		appError.raiseIfError();
-	});
-}
-
-/**
- * POST /v1/users/:userId
- * signup user
- * @param req request
- * @returns RequestBody
- */
-export function BodyPostUserId(req: express.Request): V1.SignUp.RequestBody {
-	const appError = AppError.factory(errorMessages.user.signup);
-
-	return vs.applySchemaObject(schemaBodyPostUserId, req.body, (error) => {
+	return vs.applySchemaObject(schemaBodyPostLogin, req.body, (error) => {
 		const key = error.keyStack.shift();
 		appError.addError(assignUserValidationError(key, error.rule));
 	}, () => {

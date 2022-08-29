@@ -1,5 +1,6 @@
 import { sequelize } from "common/repository";
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, NonAttribute } from "sequelize";
+import { SessionModel } from "./SessionModel";
 
 const TABLENAME = "users";
 
@@ -11,6 +12,7 @@ export class UserModel extends Model<InferAttributes<UserModel>, InferCreationAt
 	declare createdAt: number;
 	declare deletedAt: number | null;
 
+	declare sessions?: NonAttribute<SessionModel[]>;
 }
 
 UserModel.init({
@@ -66,4 +68,15 @@ UserModel.init({
 			fields: ["deleted_at"],
 		},
 	],
+});
+
+UserModel.hasMany(SessionModel, {
+	foreignKey: "userId",
+	as: "sessions",
+});
+
+SessionModel.belongsTo(UserModel, {
+	foreignKey: "userId",
+	targetKey: "id",
+	as: "user",
 });

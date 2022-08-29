@@ -23,6 +23,13 @@ export type Id = string;
  */
 export type Email = string;
 
+/**
+ * * Must be at least 8 characters long
+ * Must be at most 200 characters long
+ * @example password
+ */
+export type Password = string;
+
 export interface User {
   /** ID */
   id: Id;
@@ -31,17 +38,30 @@ export interface User {
   email: Email;
 }
 
-export interface ConfirmEmailToCreateUserRequest {
+export interface LoginRequest {
+  /** Email */
+  email: Email;
+
   /**
-   * @format email
-   * @example example@example.com
+   * * Must be at least 8 characters long
+   * * Must be at most 200 characters long
+   *
    */
-  email: string;
+  password: Password;
+}
+
+export interface ConfirmEmailToCreateUserRequest {
+  /** Email */
+  email: Email;
 }
 
 export interface SignUpRequest {
-  /** @example password */
-  password: string;
+  /**
+   * * Must be at least 8 characters long
+   * * Must be at most 200 characters long
+   *
+   */
+  password: Password;
 }
 
 export namespace Hello {
@@ -63,6 +83,23 @@ export namespace Hello {
 }
 
 export namespace V1 {
+  /**
+   * @description Login
+   * @name Login
+   * @summary Login
+   * @request POST:/v1/login
+   * @secure
+   * @response `201` `void` Successful operation
+   * @response `400` `any`
+   * @response `401` `any`
+   */
+  export namespace Login {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = LoginRequest;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
   /**
    * @description Confirm email to Create User * Api sends an email to the user with a link to confirm the email address. * if already registerd, successful response is returned too.
    * @name ConfirmEmailToCreateUser
