@@ -7,6 +7,13 @@ export interface ErrorMessage {
 }
 
 export const errorMessages = {
+	api: {
+		headerRequired: {
+			status: STATUS.BAD_REQUEST,
+			code: "apiHeaderRequired",
+			message: "required header is missing, please set X-Requested-With",
+		},
+	},
 	general: {
 		badRequest: {
 			status: STATUS.BAD_REQUEST,

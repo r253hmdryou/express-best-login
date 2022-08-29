@@ -35,6 +35,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users`)
+				.set("X-Requested-With", "test")
 				.send({
 					email: "test@example.com",
 				});
@@ -57,6 +58,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users`)
+				.set("X-Requested-With", "test")
 				.send({
 					email: "test@example.com",
 				});
@@ -78,6 +80,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users/${userId}`)
+				.set("X-Requested-With", "test")
 				.send({
 					password: "password",
 				});
@@ -102,6 +105,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/login`)
+				.set("X-Requested-With", "test")
 				.send({
 					email: "test@example.com",
 					password: "password",
@@ -116,6 +120,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users`)
+				.set("X-Requested-With", "test")
 				.send({
 					email: "invalid",
 				});
@@ -137,6 +142,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users`)
+				.set("X-Requested-With", "test")
 				.send({
 					// email: "test@example.com",
 				});
@@ -173,6 +179,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users/${userId}`)
+				.set("X-Requested-With", "test")
 				.send({
 					password: "password",
 				});
@@ -188,6 +195,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users/${userId}`)
+				.set("X-Requested-With", "test")
 				.send({
 					// password: "password",
 				});
@@ -209,6 +217,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users/${userId}`)
+				.set("X-Requested-With", "test")
 				.send({
 					password: "pass",
 				});
@@ -230,6 +239,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users/${userId}`)
+				.set("X-Requested-With", "test")
 				.send({
 					password: "a".repeat(101),
 				});
@@ -251,6 +261,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/users/${userId}`)
+				.set("X-Requested-With", "test")
 				.send({
 					password: "a".repeat(100),
 				});
@@ -262,6 +273,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/login`)
+				.set("X-Requested-With", "test")
 				.send({
 					// email: "test@example.com",
 					// password: "password",
@@ -288,6 +300,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/login`)
+				.set("X-Requested-With", "test")
 				.send({
 					email: "invalid", // invalid email
 					password: "a".repeat(101),
@@ -314,6 +327,7 @@ function testCreateUser(): void {
 		{
 			const response = await request(app)
 				.post(`/v1/login`)
+				.set("X-Requested-With", "test")
 				.send({
 					email: "test@example.com",
 					password: "pass",

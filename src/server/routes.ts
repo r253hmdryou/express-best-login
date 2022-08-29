@@ -10,11 +10,27 @@ import { routing as routingV1 } from "./routes/v1";
  */
 export function routing(): express.Router {
 	return express.Router()
+		.use(checkCSRF)
 		.use("/v1", routingV1())
 		.get("/hello", routingHandler(getHello))
 		.use(notFound)
 		.use(AppErrorHandler)
 		.use(errorHandler);
+}
+
+/**
+ * check CSRF
+ * @param req request
+ * @param _res response
+ * @param next next
+ * @throws if required header is not set
+ * @returns void
+ */
+function checkCSRF(req: express.Request, _res: express.Response, next: express.NextFunction): void {
+	if(req.header("X-Requested-With") === undefined) {
+		AppError.raise(errorMessages.api.headerRequired);
+	}
+	next();
 }
 
 /**
