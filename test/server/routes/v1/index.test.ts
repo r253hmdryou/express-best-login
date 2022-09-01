@@ -13,7 +13,7 @@ function testHelloWorld(): void {
 	test("Hello World", async() => {
 		{
 			const response = await request(app)
-				.get(`/hello`)
+				.get(`/v1/hello`)
 				.set("X-Requested-With", "test");
 
 			expect(response.status).toEqual(200);

@@ -15,7 +15,21 @@ import * as validators from "validators/v1";
 export function routing(): express.Router {
 	return express.Router()
 		.use("/users", routingUsers())
+		.get("/hello", routingHandler(getHello))
 		.post("/login", routingHandler(postLogin));
+}
+
+/**
+ * GET /hello
+ * Hello World
+ * @param _req request
+ * @param res response
+ * @returns void
+ */
+async function getHello(_req: express.Request, res: express.Response): Promise<void> {
+	res
+		.status(200)
+		.json("Hello World!!");
 }
 
 /**

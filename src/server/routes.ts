@@ -1,7 +1,6 @@
 import express from "express";
 import { AppError } from "libs/error/AppError";
 import { errorMessages } from "libs/error/messages";
-import { routingHandler } from "libs/handler";
 import { routing as routingV1 } from "./routes/v1";
 
 /**
@@ -12,7 +11,6 @@ export function routing(): express.Router {
 	return express.Router()
 		.use(checkCSRF)
 		.use("/v1", routingV1())
-		.get("/hello", routingHandler(getHello))
 		.use(notFound)
 		.use(AppErrorHandler)
 		.use(errorHandler);
@@ -31,19 +29,6 @@ function checkCSRF(req: express.Request, _res: express.Response, next: express.N
 		AppError.raise(errorMessages.api.headerRequired);
 	}
 	next();
-}
-
-/**
- * GET /hello
- * Hello World
- * @param _req request
- * @param res response
- * @returns void
- */
-async function getHello(_req: express.Request, res: express.Response): Promise<void> {
-	res
-		.status(200)
-		.json("Hello World!!");
 }
 
 /**
