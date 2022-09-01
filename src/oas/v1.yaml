@@ -34,6 +34,15 @@ components:
       description: "Internal server error"
 
   parameters:
+    CSRFHeader:
+      name: "X-Requested-With"
+      in: header
+      required: true
+      description: "CSRF Header"
+      example: "XMLHttpRequest"
+      schema:
+        type: string
+
     UserId:
       name: userId
       in: path
@@ -102,6 +111,8 @@ paths:
       summary: "Get Hello World"
       description: "Get Hello World"
       operationId: "getHelloWorld"
+      parameters:
+      - $ref: "#/components/parameters/CSRFHeader"
       responses:
         200:
           description: "Successful operation"
@@ -118,6 +129,8 @@ paths:
       operationId: "login"
       tags:
       - users
+      parameters:
+      - $ref: "#/components/parameters/CSRFHeader"
       requestBody:
         content:
           application/json:
@@ -141,6 +154,8 @@ paths:
       operationId: "confirmEmailToCreateUser"
       tags:
       - users
+      parameters:
+      - $ref: "#/components/parameters/CSRFHeader"
       requestBody:
         content:
           application/json:
@@ -160,6 +175,8 @@ paths:
       - users
       security:
       - userAuth: []
+      parameters:
+      - $ref: "#/components/parameters/CSRFHeader"
       responses:
         200:
           description: "Successful operation"
@@ -178,6 +195,7 @@ paths:
       - users
       parameters:
       - $ref: "#/components/parameters/UserId"
+      - $ref: "#/components/parameters/CSRFHeader"
       requestBody:
         content:
           application/json:
