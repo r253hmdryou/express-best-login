@@ -1,6 +1,6 @@
 import { UserEntity } from "features/users/UserEntity";
 import * as UserUsecase from "features/users/UserUsecase";
-import { V1 } from "types/api";
+import { Users } from "types/api";
 
 /**
  * POST /v1/users
@@ -18,7 +18,7 @@ export async function post(email: string): Promise<void> {
  * @param user user
  * @returns user
  */
-export function getMe(user: UserEntity): V1.GetMyUser.ResponseBody {
+export function getMe(user: UserEntity): Users.GetMyUser.ResponseBody {
 	return UserUsecase.toResponse(user);
 }
 
@@ -29,7 +29,7 @@ export function getMe(user: UserEntity): V1.GetMyUser.ResponseBody {
  * @param password password
  * @returns user
  */
-export async function postUserId(userId: string, password: string): Promise<V1.SignUp.ResponseBody> {
+export async function postUserId(userId: string, password: string): Promise<Users.SignUp.ResponseBody> {
 	const user = await UserUsecase.signUp(userId, password);
 	return UserUsecase.toResponse(user);
 }

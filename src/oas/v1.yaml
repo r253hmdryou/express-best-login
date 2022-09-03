@@ -10,14 +10,15 @@ servers:
   description: "Local server"
 
 security:
-- bearerAuth: []
+- cookieAuth: []
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: "eblaSession"
+      description: "Cookie auth"
 
   responses:
     BadRequest:
@@ -128,7 +129,7 @@ paths:
       description: "Login"
       operationId: "login"
       tags:
-      - users
+      - authentication
       parameters:
       - $ref: "#/components/parameters/CSRFHeader"
       requestBody:
@@ -139,8 +140,30 @@ paths:
       responses:
         201:
           description: "Successful operation"
+          headers:
+            Set-Cookie:
+              description: "Set-Cookie"
+              schema:
+                type: string
+                example: connect.sid=s%3AY4gIObyuUR_tzAJNM9vgwtzMySeb9IFu.aCaMCHC9tFB7tibrUF4tFUFLp3VtHOBSXUdJc2YisP4; Path=/; Expires=Sat, 03 Sep 2022 23:11:28 GMT; HttpOnly
         400:
           $ref: "#/components/responses/BadRequest"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+  /logout:
+    post:
+      summary: "Logout"
+      description: "disable cookie to logout"
+      operationId: "Logout"
+      tags:
+      - authentication
+      security:
+      - cookieAuth: []
+      parameters:
+      - $ref: "#/components/parameters/CSRFHeader"
+      responses:
+        201:
+          description: "Successful operation"
         401:
           $ref: "#/components/responses/UnauthorizedError"
 
@@ -174,7 +197,7 @@ paths:
       tags:
       - users
       security:
-      - userAuth: []
+      - cookieAuth: []
       parameters:
       - $ref: "#/components/parameters/CSRFHeader"
       responses:
@@ -193,6 +216,8 @@ paths:
       operationId: "signUp"
       tags:
       - users
+      security:
+      - cookieAuth: []
       parameters:
       - $ref: "#/components/parameters/UserId"
       - $ref: "#/components/parameters/CSRFHeader"

@@ -140,10 +140,30 @@ function testCreateUser(): void {
 
 			expect(response.status).toEqual(200);
 		}
+
+		// logout
+		{
+			const response = await request(app)
+				.post(`/v1/logout`)
+				.set("X-Requested-With", "test")
+				.set("Cookie", cookie);
+
+			expect(response.status).toEqual(200);
+		}
+
+		// get my user
+		{
+			const response = await request(app)
+				.get(`/v1/users/me`)
+				.set("X-Requested-With", "test")
+				.set("Cookie", cookie);
+
+			expect(response.status).toEqual(401);
+		}
 	});
 
 	test("error: create user", async() => {
-		// parameter error
+		// parameter error - invalid email
 		{
 			const response = await request(app)
 				.post(`/v1/users`)
@@ -165,7 +185,7 @@ function testCreateUser(): void {
 			});
 		}
 
-		// parameter error
+		// parameter error - no email
 		{
 			const response = await request(app)
 				.post(`/v1/users`)

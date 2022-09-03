@@ -77,18 +77,18 @@ export namespace Hello {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = {};
+    export type RequestHeaders = { "X-Requested-With": string };
     export type ResponseBody = Id;
   }
 }
 
-export namespace V1 {
+export namespace Login {
   /**
    * @description Login
-   * @tags users
+   * @tags authentication
    * @name Login
    * @summary Login
-   * @request POST:/v1/login
+   * @request POST:/login
    * @secure
    * @response `201` `void` Successful operation
    * @response `400` `any`
@@ -98,15 +98,38 @@ export namespace V1 {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = LoginRequest;
-    export type RequestHeaders = {};
+    export type RequestHeaders = { "X-Requested-With": string };
     export type ResponseBody = void;
   }
+}
+
+export namespace Logout {
+  /**
+   * @description disable cookie to logout
+   * @tags authentication
+   * @name Logout
+   * @summary Logout
+   * @request POST:/logout
+   * @secure
+   * @response `201` `void` Successful operation
+   * @response `401` `any`
+   */
+  export namespace Logout {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = { "X-Requested-With": string };
+    export type ResponseBody = void;
+  }
+}
+
+export namespace Users {
   /**
    * @description Confirm email to Create User * Api sends an email to the user with a link to confirm the email address. * if already registerd, successful response is returned too.
    * @tags users
    * @name ConfirmEmailToCreateUser
    * @summary Confirm email to Create User
-   * @request POST:/v1/users
+   * @request POST:/users
    * @secure
    * @response `201` `void` Always returns success if the format of the emaill address is correct
    * @response `400` `any`
@@ -115,7 +138,7 @@ export namespace V1 {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = ConfirmEmailToCreateUserRequest;
-    export type RequestHeaders = {};
+    export type RequestHeaders = { "X-Requested-With": string };
     export type ResponseBody = void;
   }
   /**
@@ -123,7 +146,7 @@ export namespace V1 {
    * @tags users
    * @name GetMyUser
    * @summary Get my user
-   * @request GET:/v1/users/me
+   * @request GET:/users/me
    * @secure
    * @response `200` `UserForMe` Successful operation
    * @response `401` `any`
@@ -132,7 +155,7 @@ export namespace V1 {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = {};
+    export type RequestHeaders = { "X-Requested-With": string };
     export type ResponseBody = UserForMe;
   }
   /**
@@ -140,7 +163,7 @@ export namespace V1 {
    * @tags users
    * @name SignUp
    * @summary Sign up
-   * @request POST:/v1/users/{userId}
+   * @request POST:/users/{userId}
    * @secure
    * @response `201` `UserForMe` successful operation
    * @response `400` `any`
@@ -149,7 +172,7 @@ export namespace V1 {
     export type RequestParams = { userId: Id };
     export type RequestQuery = {};
     export type RequestBody = SignUpRequest;
-    export type RequestHeaders = {};
+    export type RequestHeaders = { "X-Requested-With": string };
     export type ResponseBody = UserForMe;
   }
 }

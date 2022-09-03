@@ -27,3 +27,16 @@ export async function create(sessionId: string, userId: number, cookie: Cookie):
 		fields: ["userId"],
 	});
 }
+
+/**
+ * remove session record
+ * @param sessionId session
+ * @returns void
+ */
+export async function remove(sessionId: string): Promise<void> {
+	await SessionModel.destroy({
+		where: {
+			sessionId: sessionId,
+		},
+	});
+}

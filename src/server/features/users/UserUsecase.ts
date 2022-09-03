@@ -6,16 +6,9 @@ import { UserEntity } from "./UserEntity";
 import * as UserRepository from "./UserRepository";
 
 import * as EmailUsecase from "features/emails/EmailUsecase";
-
-import * as SessionRepository from "features/serssions/SessionRepository";
+import * as SessionUsecase from "features/serssions/SessionUsecase";
 
 import { UserForMe } from "types/api";
-
-declare module "express-session" {
-	interface SessionData {
-		eblaSessionId: string;
-	}
-}
 
 /**
  * find user by uuid
@@ -116,8 +109,16 @@ export async function login(req: express.Request, email: string, password: strin
 		AppError.raise(errorMessages.user.login);
 	}
 
-	await SessionRepository.create(req.sessionID, user.id, req.session.cookie);
-	req.session.eblaSessionId = req.sessionID;
+	await SessionUsecase.create(req, user.id);
+}
+
+/**
+ * disable cookie to logout
+ * @param req request
+ * @returns void
+ */
+export async function logout(req: express.Request): Promise<void> {
+	await SessionUsecase.remove(req);
 }
 
 /**

@@ -1,5 +1,4 @@
 import express from "express";
-import { V1 } from "types/api";
 
 import { routingHandler } from "libs/handler";
 
@@ -8,6 +7,7 @@ import * as services from "services/v1/users";
 import * as validators from "validators/v1/users";
 import { paramUserId } from "validators/common";
 import { findAuthorizedUser } from "features/users/UserUsecase";
+import { Users } from "types/api";
 
 /**
  * routing users
@@ -28,7 +28,7 @@ export function routing(): express.Router {
  * @returns void
  */
 async function post(req: express.Request, res: express.Response): Promise<void> {
-	const reqBody: V1.ConfirmEmailToCreateUser.RequestBody = validators.BodyPost(req);
+	const reqBody: Users.ConfirmEmailToCreateUser.RequestBody = validators.BodyPost(req);
 	await services.post(reqBody.email);
 
 	res
@@ -45,7 +45,7 @@ async function post(req: express.Request, res: express.Response): Promise<void> 
  */
 async function getMe(req: express.Request, res: express.Response): Promise<void> {
 	const user = await findAuthorizedUser(req);
-	const resBody: V1.GetMyUser.ResponseBody = services.getMe(user);
+	const resBody: Users.GetMyUser.ResponseBody = services.getMe(user);
 
 	res
 		.status(200)
@@ -60,9 +60,9 @@ async function getMe(req: express.Request, res: express.Response): Promise<void>
  * @returns void
  */
 async function postUserId(req: express.Request, res: express.Response): Promise<void> {
-	const reqParam: V1.SignUp.RequestParams = paramUserId(req);
-	const reqBody: V1.SignUp.RequestBody = validators.BodyPostUserId(req);
-	const resBody: V1.SignUp.ResponseBody = await services.postUserId(reqParam.userId, reqBody.password);
+	const reqParam: Users.SignUp.RequestParams = paramUserId(req);
+	const reqBody: Users.SignUp.RequestBody = validators.BodyPostUserId(req);
+	const resBody: Users.SignUp.ResponseBody = await services.postUserId(reqParam.userId, reqBody.password);
 
 	res
 		.status(201)
