@@ -100,7 +100,7 @@ export async function signUp(userId: string, password: string): Promise<UserEnti
  * @param password password
  * @returns void
  */
-export async function login(req: express.Request, email: string, password: string): Promise<void> {
+export async function login(req: express.Request, email: string, password: string): Promise<UserEntity> {
 	const user = await findByEmail(email);
 	if(user === null || !user.isAvailable()) {
 		AppError.raise(errorMessages.user.login);
@@ -110,6 +110,7 @@ export async function login(req: express.Request, email: string, password: strin
 	}
 
 	await SessionUsecase.create(req, user.id);
+	return user;
 }
 
 /**

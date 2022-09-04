@@ -11,7 +11,8 @@ import { Login } from "types/api";
  * @returns void
  */
 export async function postLogin(req: express.Request, email: string, password: string): Promise<Login.Login.ResponseBody> {
-	return await UserUsecase.login(req, email, password);
+	const user = await UserUsecase.login(req, email, password);
+	return UserUsecase.toResponse(user);
 }
 
 /**

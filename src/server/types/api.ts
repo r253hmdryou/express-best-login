@@ -90,7 +90,7 @@ export namespace Login {
    * @summary Login
    * @request POST:/login
    * @secure
-   * @response `201` `void` Successful operation
+   * @response `201` `UserForMe` Successful operation
    * @response `400` `any`
    * @response `401` `any`
    */
@@ -99,7 +99,7 @@ export namespace Login {
     export type RequestQuery = {};
     export type RequestBody = LoginRequest;
     export type RequestHeaders = { "X-Requested-With": string };
-    export type ResponseBody = void;
+    export type ResponseBody = UserForMe;
   }
 }
 
