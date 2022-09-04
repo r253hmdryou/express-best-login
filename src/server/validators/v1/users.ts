@@ -4,7 +4,7 @@ import vs from "value-schema";
 import { AppError } from "libs/error/AppError";
 import { ErrorMessage, errorMessages } from "libs/error/messages";
 
-import { V1 } from "types/api";
+import { Users } from "types/api";
 import { RULE } from "../common";
 import { Key } from "value-schema/dist/libs/types";
 import { config } from "libs/config";
@@ -26,7 +26,7 @@ const schemaBodyPostUserId = {
  * @param req request
  * @returns RequestBody
  */
-export function BodyPost(req: express.Request): V1.ConfirmEmailToCreateUser.RequestBody {
+export function BodyPost(req: express.Request): Users.ConfirmEmailToCreateUser.RequestBody {
 	const appError = AppError.factory(errorMessages.user.create);
 
 	return vs.applySchemaObject(schemaBodyPost, req.body, (error) => {
@@ -43,7 +43,7 @@ export function BodyPost(req: express.Request): V1.ConfirmEmailToCreateUser.Requ
  * @param req request
  * @returns RequestBody
  */
-export function BodyPostUserId(req: express.Request): V1.SignUp.RequestBody {
+export function BodyPostUserId(req: express.Request): Users.SignUp.RequestBody {
 	const appError = AppError.factory(errorMessages.user.signup);
 
 	return vs.applySchemaObject(schemaBodyPostUserId, req.body, (error) => {

@@ -7,7 +7,7 @@ import { AppError } from "libs/error/AppError";
 import { ErrorMessage, errorMessages } from "libs/error/messages";
 
 import { RULE } from "./common";
-import { V1 } from "types/api";
+import { Login } from "types/api";
 
 const schemaBodyPostLogin = {
 	email: vs.email(),
@@ -23,7 +23,7 @@ const schemaBodyPostLogin = {
  * @param req request
  * @returns RequestBody
  */
-export function BodyPostLogin(req: express.Request): V1.Login.RequestBody {
+export function BodyPostLogin(req: express.Request): Login.Login.RequestBody {
 	const appError = AppError.factory(errorMessages.user.login);
 
 	return vs.applySchemaObject(schemaBodyPostLogin, req.body, (error) => {

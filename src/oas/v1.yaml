@@ -6,7 +6,7 @@ info:
   description: "API for the Express Best Login API project"
 
 servers:
-- url: "http://localhost:23000/v1"
+- url: "https://localhost.ebla.r253hmdryou.dev/v1"
   description: "Local server"
 
 security:

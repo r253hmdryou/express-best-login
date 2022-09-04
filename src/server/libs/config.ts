@@ -17,6 +17,20 @@ export const config = {
 			maxLength: 100,
 		},
 	},
+	session: {
+		secret: "secret",
+		name: "eblaSession",
+		resave: false,
+		saveUninitialized: true,
+		proxy: true,
+		cookie: {
+			maxAge: 86400 * 1000,
+			httpOnly: true,
+			domain: "localhost.ebla.r253hmdryou.dev",
+			secure: getIsSecureCookie(),
+			sameSite: "none" as const,
+		},
+	},
 };
 
 /**
@@ -98,4 +112,15 @@ function getMailFromAddress(): string {
 		throw new Error("MAIL_FROM is not defined");
 	}
 	return process.env.MAIL_FROM;
+}
+
+/**
+ * get isSecureCookie
+ * @returns isSecureCookie
+ */
+function getIsSecureCookie(): boolean {
+	if(process.env.COOKIE_SECURE === undefined) {
+		return true;
+	}
+	return process.env.COOKIE_SECURE !== "false";
 }
